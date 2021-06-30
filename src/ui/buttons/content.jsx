@@ -122,5 +122,8 @@ export const buttonContent : ButtonContentMap = {
     },
     zh: {
         PoweredBy: ({ logoColor }) => <Fragment><Text>技术支持提供方： </Text><PayPalLogo logoColor={ logoColor } /></Fragment>
+    },
+    zh_Hant: {
+        PoweredBy: ({ logoColor }) => <Fragment><Text>技術支持： </Text><PayPalLogo logoColor={ logoColor } /></Fragment>
     }
 };

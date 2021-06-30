@@ -154,5 +154,9 @@ export const containerContent : ContentMap = {
     zh: {
         windowMessage:   '没有找到安全的PayPal浏览器？我们将帮助您重启窗口以完成付款',
         continueMessage: '继续'
+    },
+    zh_Hant: {
+        windowMessage:   '看不到安全 PayPal 瀏覽器？我們會協助你重新啟動視窗，以完成購物程序',
+        continueMessage: '按一下並繼續'
     }
 };
