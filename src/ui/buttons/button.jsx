@@ -3,12 +3,12 @@
 
 import type { FundingEligibilityType } from '@paypal/sdk-client/src';
 import { FUNDING, ENV, type LocaleType } from '@paypal/sdk-constants/src';
-import { node, type ElementNode } from 'jsx-pragmatic/src';
+import { node, html, type ElementNode } from 'jsx-pragmatic/src';
 import { LOGO_COLOR, LOGO_CLASS } from '@paypal/sdk-logos/src';
 import { noop, preventClickFocus, isBrowser, isElement } from 'belter/src';
 
 import type { ContentType, Wallet, Experiment, WalletInstrument } from '../../types';
-import { ATTRIBUTE, CLASS, BUTTON_COLOR, BUTTON_NUMBER, TEXT_COLOR, BUTTON_FLOW } from '../../constants';
+import { ATTRIBUTE, CLASS, BUTTON_COLOR, BUTTON_LABEL, BUTTON_NUMBER, TEXT_COLOR, BUTTON_FLOW } from '../../constants';
 import { getFundingConfig } from '../../funding';
 
 import type { ButtonStyle, Personalization, OnShippingChange } from './props';
@@ -93,8 +93,6 @@ export function Button({ fundingSource, style, multiple, locale, env, fundingEli
     };
 
     const { layout, shape } = style;
-    
-    const labelText =  typeof fundingConfig.labelText === 'function' ?  fundingConfig.labelText({ content }) : (fundingConfig.labelText || fundingSource);
 
     const logoNode = (
         <Logo
@@ -156,7 +154,23 @@ export function Button({ fundingSource, style, multiple, locale, env, fundingEli
     }
 
     const shouldShowWalletMenu = isWallet && instrument && showWalletMenu({ instrument });
+    
+    const getLabelText = () => {
+        if (typeof fundingConfig.labelText === 'function') {
+            return fundingConfig.labelText({ content });
+        }
 
+        if (label !== BUTTON_LABEL.PAYPAL) {
+            const str = labelNode.render(html());
+            if (str.replace(/<img.*<\/img>/, '').length > 0) {
+                return str.replace(/<span.*?>/, '')
+                    .replace(/<\/span>/, '')
+                    .replace(/<img.*<\/img>/, fundingSource);
+            }
+        }
+        return (fundingConfig.labelText || fundingSource);
+    };
+        
     return (
         <div
             class={ [
@@ -198,7 +212,7 @@ export function Button({ fundingSource, style, multiple, locale, env, fundingEli
                 onRender={ onButtonRender }
                 onKeyPress={ keypressHandler }
                 tabindex='0'
-                aria-label={ labelText }>
+                aria-label={ getLabelText() }>
 
                 <div class={ CLASS.BUTTON_LABEL }>
                     { labelNode }
